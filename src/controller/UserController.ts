@@ -36,6 +36,20 @@ export class UserController {
         return this.userRepository.save(user)
     }
 
+    async update(request: Request, response: Response, next: NextFunction) {
+        const id = parseInt(request.params.id)
+        
+        let userToUpdate = await this.userRepository.findOneBy({ id })
+
+        if (!userToUpdate) {
+            return "this user not exist"
+        }
+
+        await this.userRepository.update(id, request.body)
+
+        return "user has been updated"
+    }
+
     async remove(request: Request, response: Response, next: NextFunction) {
         const id = parseInt(request.params.id)
 

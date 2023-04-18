@@ -16,6 +16,16 @@ export const Routes = [{
         param('id').isInt(),
     ]
 }, {
+    method: "patch",
+    route: "/users/:id",
+    controller: UserController,
+    action: "update",
+    validation: [
+        body('firstName').isString(),
+        body('lastName').isString(),
+        body('age').isInt({ min:0 })
+    ]
+},{
     method: "post",
     route: "/users",
     controller: UserController,
