@@ -4,4 +4,5 @@ Steps to run this project:
 
 1. Run `npm i` command
 2. Setup database settings inside `data-source.ts` file
-3. Run `npm start` command
+3. Run `npm start` command to run without containers if PostgreSQL is installed locally
+4. Run `docker-compose up --build` command to containerize using docker if installed

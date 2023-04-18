@@ -8,6 +8,16 @@ export const Routes = [{
     action: "all",
     validation: [],
 }, {
+    method: "post",
+    route: "/users",
+    controller: UserController,
+    action: "save",
+    validation: [
+        body('firstName').isString(),
+        body('lastName').isString(),
+        body('age').isInt({ min:0 })
+    ]
+}, {
     method: "get",
     route: "/users/:id",
     controller: UserController,
@@ -20,16 +30,6 @@ export const Routes = [{
     route: "/users/:id",
     controller: UserController,
     action: "update",
-    validation: [
-        body('firstName').isString(),
-        body('lastName').isString(),
-        body('age').isInt({ min:0 })
-    ]
-},{
-    method: "post",
-    route: "/users",
-    controller: UserController,
-    action: "save",
     validation: [
         body('firstName').isString(),
         body('lastName').isString(),
