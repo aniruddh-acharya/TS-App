@@ -1,24 +1,20 @@
-import { timeStamp } from "console"
 import { Entity, PrimaryGeneratedColumn, Column, DeleteDateColumn, CreateDateColumn } from "typeorm"
 
 @Entity()
-export class User {
+export class Product {
 
     @PrimaryGeneratedColumn()
     id: number
 
     @Column()
-    firstName: string
-
+    name: string
+    
     @Column()
-    lastName: string
-
-    @Column()
-    age: number
+    cost: number
 
     @CreateDateColumn()
     createdOn: Date;
-
+    
     @DeleteDateColumn({ type:'timestamp', nullable: true })
     deletedOn?: Date;
 
