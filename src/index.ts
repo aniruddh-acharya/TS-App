@@ -9,6 +9,7 @@ import { validationResult } from "express-validator";
 import { swaggerJSDoc } from "swagger-jsdoc";
 import * as swaggerUi from 'swagger-ui-express';
 import * as swaggerSpec from './swagger.json'
+import { AuthRequest, authenticateToken } from "./auth/authetication";
 
 function handleError(err, req, res, next) {
     res.status(err.statusCode || 500).send({message: err.message});
@@ -37,7 +38,7 @@ const options: swaggerJSDoc.options = {
   
 //const swaggerSpec = swaggerJSDoc(options);
 
-app.use('/api-docs', swaggerUi.serve ,swaggerUi.setup(options))
+app.use('/api-docs', swaggerUi.serve ,swaggerUi.setup(swaggerSpec))
 app.use(morgan('dev'))
 app.use(bodyParser.json())
 
@@ -45,21 +46,25 @@ app.use(bodyParser.json())
 
 // register express routes from defined application routes
 Routes.forEach(route => {
-    (app as any)[route.method](route.route,
-            ...route.validation, 
-        async (req: Request, res: Response, next: Function) => {
-            try{
-                const errors = validationResult(req);
-                if (!errors.isEmpty()) {
-                    return res.status(400).json({ errors: errors.array() });
-                }
-                const result = await (new (route.controller as any))[route.action](req, res, next)
-                res.json(result);
-            } catch(error){
-                next(error);
-            }    
-    })
-})
+    const skipAuth = ['/users/login', '/users/signup'].includes(route.route);
+  
+    const middleware = skipAuth ? [] : [authenticateToken];
+  
+    app[route.method](route.route, ...middleware, ...route.validation, async (req: AuthRequest, res: Response, next: Function) => {
+      try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(400).json({ errors: errors.array() });
+        }
+        const result = await (new (route.controller as any))[route.action](req, res, next)
+        res.json(result);
+      } catch (error) {
+        next(error);
+      }
+    });
+  });
+
+
 
 /** 
 * @swagger
@@ -71,6 +76,10 @@ Routes.forEach(route => {
 *       200:
 *           description: To test get method
 */
+
+app.get('/protected', authenticateToken, async (req: Request, res: Response) => {
+    res.send({ message: `Hello, ${req.user.username}! This is a protected route.` });
+  });
 
 app.use(handleError);
 app.listen(port);

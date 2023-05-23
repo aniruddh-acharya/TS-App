@@ -19,7 +19,7 @@ export class User {
     @CreateDateColumn()
     createdOn: Date;
 
-    @DeleteDateColumn({ type:'timestamp', nullable: true })
-    deletedOn?: Date;
+    @Column()
+    status: string;
 
 }

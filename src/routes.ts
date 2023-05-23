@@ -23,13 +23,23 @@ export const Routes = [{
 }, {
     // This route will retrieve all the users
     method: "post",
-    route: "/users",
+    route: "/users/signup",
     controller: UserController,
-    action: "create",
+    action: "signup",
     validation: [
         body('firstName').isString(),
         body('lastName').isString(),
         body('age').isInt({ min:0 })
+    ]
+}, {
+    // This route will login the user
+    method: "post",
+    route: "/users/login",
+    controller: UserController,
+    action: "login",
+    validation: [
+        body('username').isString(),
+        body('password').isString()
     ]
 },
 {
