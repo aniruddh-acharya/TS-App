@@ -1,5 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
+import { AppDataSource } from '../data-source';
+import { Credential } from '../entity/Credential';
+
+const credentialRepository = AppDataSource.getRepository(Credential);
 
 interface User {
   id: number;
@@ -8,8 +12,10 @@ interface User {
 }
 
 interface AuthRequest extends Request {
+  params?: any;
   headers: any;
   user?: User;
+  body?: any;
 }
 
 function generateToken(user: User): string {
@@ -22,34 +28,71 @@ function generateToken(user: User): string {
   return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);
 }
 
-function verifyToken(token: string): User | null {
+async function verifyToken(token: string): Promise<User | null> {
   try {
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET) as jwt.JwtPayload;
-    const user: User = {
-      id: decoded.id,
-      username: decoded.username,
-      role: decoded.role,
-    };
-    return user;
+    const id = decoded.userId;
+    
+    const user = await credentialRepository.findOne({
+      where: { id, status: 'active' }
+      })
+  
+    if (user) {
+      return user;
+    } else {
+      return null;
+    }
   } catch (error) {
     return null;
   }
 }
 
-function authenticateToken(req: Request, res: Response, next: NextFunction): void {
+
+async function identifyUser(req: AuthRequest, res: Response, next: NextFunction): Promise<string> {
   const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(' ')[1];
-  console.log(req.headers);
+
   if (token) {
-    const user = verifyToken(token);
+    const user = await verifyToken(token);
+
     if (user) {
-      req.user = user;
-      return next();
+      return user.username;
     }
   }
 
   res.sendStatus(401);
 }
 
+async function authenticateToken(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(' ')[1];
 
-export { generateToken, verifyToken, authenticateToken, User, AuthRequest };
+  if (token) {
+    const user = await verifyToken(token);
+
+    if (user) {
+      req.user = user;
+      next();
+      return;
+    }
+  }
+
+  res.sendStatus(401);
+}
+
+function requireAdmin(req: AuthRequest, res: Response, next: NextFunction): void {
+  const user = req.user;
+
+  if (user && user.role === 'admin') {
+    // User is an admin, allow access to the route
+    next();
+    //return;
+  } else {
+    // User is not an admin, deny access with a 403 Forbidden status
+    res.sendStatus(403);    
+    //return;
+  }
+}
+
+
+export { generateToken, verifyToken, authenticateToken, User, AuthRequest, requireAdmin };

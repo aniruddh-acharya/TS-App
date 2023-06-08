@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, DeleteDateColumn, CreateDateColumn } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, DeleteDateColumn, CreateDateColumn, UpdateDateColumn } from "typeorm"
 
 @Entity()
 export class Product {
@@ -12,10 +12,23 @@ export class Product {
     @Column()
     cost: number
 
+    
+    // Audit log columns
+
     @CreateDateColumn()
     createdOn: Date;
+
+    @Column()
+    createdBy: string;
+
+    @UpdateDateColumn()
+    updatedOn: Date;
     
-    @DeleteDateColumn({ type:'timestamp', nullable: true })
-    deletedOn?: Date;
+    @Column()
+    updatedBy: string;
+  
+    @Column()
+    status: string;
+
 
 }

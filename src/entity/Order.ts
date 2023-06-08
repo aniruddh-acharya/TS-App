@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, DeleteDateColumn, CreateDateColumn } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, DeleteDateColumn, CreateDateColumn, UpdateDateColumn } from "typeorm"
 
 @Entity()
 export class Order {
@@ -18,6 +18,18 @@ export class Order {
     @CreateDateColumn()
     purchasedOn: Date
 
-    @DeleteDateColumn({ type:'timestamp', nullable: true })
-    deletedOn?: Date;
+    
+    // Audit log columns
+
+    @Column()
+    createdBy: string;
+
+    @UpdateDateColumn()
+    updatedOn: Date;
+    
+    @Column()
+    updatedBy: string;
+
+    @Column()
+    status: string;
 }

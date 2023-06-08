@@ -9,7 +9,7 @@ import { validationResult } from "express-validator";
 import { swaggerJSDoc } from "swagger-jsdoc";
 import * as swaggerUi from 'swagger-ui-express';
 import * as swaggerSpec from './swagger.json'
-import { AuthRequest, authenticateToken } from "./auth/authetication";
+import { AuthRequest, authenticateToken, requireAdmin } from "./auth/authetication";
 
 function handleError(err, req, res, next) {
     res.status(err.statusCode || 500).send({message: err.message});
@@ -47,10 +47,12 @@ app.use(bodyParser.json())
 // register express routes from defined application routes
 Routes.forEach(route => {
     const skipAuth = ['/users/login', '/users/signup'].includes(route.route);
+    const skipAdmin = ['/users/login', '/users/signup','/users','/products','/products/:id','/orders'].includes(route.route);
   
-    const middleware = skipAuth ? [] : [authenticateToken];
+    const authMiddleware = skipAuth ? [] : [authenticateToken];    
+    const adminMiddleware = skipAdmin ? [] : [requireAdmin];
   
-    app[route.method](route.route, ...middleware, ...route.validation, async (req: AuthRequest, res: Response, next: Function) => {
+    app[route.method](route.route, ...authMiddleware, ...adminMiddleware, ...route.validation, async (req: AuthRequest, res: Response, next: Function) => {
       try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

@@ -1,5 +1,6 @@
 import { body, param } from "express-validator"
 import { UserController } from "./controller/UserController"
+import { AuthController } from "./controller/AuthController"
 import { ProductController } from "./controller/ProductController"
 import { OrderController } from "./controller/OrderController"
 
@@ -15,16 +16,13 @@ export const Routes = [{
     *       200:
     *           description: To test get method
     */
-    method: "get",
-    route: "/users",
-    controller: UserController,
-    action: "all",
-    validation: [],
-}, {
+
+//Route Configurations for Credential Table
+
     // This route will retrieve all the users
     method: "post",
     route: "/users/signup",
-    controller: UserController,
+    controller: AuthController,
     action: "signup",
     validation: [
         body('firstName').isString(),
@@ -35,14 +33,22 @@ export const Routes = [{
     // This route will login the user
     method: "post",
     route: "/users/login",
-    controller: UserController,
+    controller: AuthController,
     action: "login",
     validation: [
         body('username').isString(),
         body('password').isString()
     ]
 },
+
+//Route Configurations for User Table
 {
+    method: "get",
+    route: "/users",
+    controller: UserController,
+    action: "all",
+    validation: [],
+}, {
     method: "get",
     route: "/users/:id",
     controller: UserController,
@@ -70,7 +76,7 @@ export const Routes = [{
     ]
 },
 
-
+//Route Configurations for Product Table
 {
     method: "get",
     route: "/products",
@@ -114,6 +120,7 @@ export const Routes = [{
 },
 
 
+//Route Configurations for Order Table
 {
     method: "get",
     route: "/orders",

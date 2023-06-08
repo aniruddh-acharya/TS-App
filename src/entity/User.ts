@@ -1,5 +1,4 @@
-import { timeStamp } from "console"
-import { Entity, PrimaryGeneratedColumn, Column, DeleteDateColumn, CreateDateColumn } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, DeleteDateColumn, CreateDateColumn, UpdateDateColumn } from "typeorm"
 
 @Entity()
 export class User {
@@ -16,9 +15,20 @@ export class User {
     @Column()
     age: number
 
+    // Audit log columns
+
     @CreateDateColumn()
     createdOn: Date;
 
+    @Column()
+    createdBy: string;
+
+    @UpdateDateColumn()
+    updatedOn: Date;
+    
+    @Column()
+    updatedBy: string;
+    
     @Column()
     status: string;
 

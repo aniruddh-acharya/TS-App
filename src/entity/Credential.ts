@@ -14,14 +14,28 @@ export class Credential {
     @Column()
     password: string;
 
+    @Column()
+    role: string;
+
     @OneToOne(type => User) 
     @JoinColumn() 
     user: User;
 
+    // Audit log columns
+
     @CreateDateColumn()
     createdOn: Date;
 
+    @Column()
+    createdBy: string;
+
     @UpdateDateColumn()
     updatedOn: Date;
+    
+    @Column()
+    updatedBy: string;
+    
+    @Column()
+    status: string;
 
 }

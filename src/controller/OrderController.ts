@@ -1,22 +1,22 @@
 import { AppDataSource } from '../data-source'
 import { NextFunction, Request, Response } from "express"
 import { Order } from "../entity/Order"
-import { IsNull } from 'typeorm';
+import { AuthRequest } from '../auth/authetication';
 
 export class OrderController {
 
     private orderRepository = AppDataSource.getRepository(Order)
 
-    async all(request: Request, response: Response, next: NextFunction) {
-        return this.orderRepository.find({ where: { deletedOn: IsNull() } });
+    async all(request: AuthRequest, response: Response, next: NextFunction) {
+        return this.orderRepository.find({ where: { status: 'active' } });
     }
 
-    async one(request: Request, response: Response, next: NextFunction) {
+    async one(request: AuthRequest, response: Response, next: NextFunction) {
         const id = parseInt(request.params.id)
         
 
         const order = await this.orderRepository.findOne({
-            where: { id , deletedOn: IsNull() }
+            where: { id , status: 'active' }
         })
 
         if (!order) {
@@ -26,19 +26,22 @@ export class OrderController {
         return order
     }
 
-    async create(request: Request, response: Response, next: NextFunction) {
+    async create(request: AuthRequest, response: Response, next: NextFunction) {
         const { userID, productID, quantity } = request.body;
 
         const order = Object.assign(new Order(), {
             userID,
             productID, 
-            quantity
+            quantity,
+            createdBy: request.user.username,
+            updatedBy: request.user.username,
+            status: "active"
         })
 
         return this.orderRepository.save(order)
     }
 
-    async update(request: Request, response: Response, next: NextFunction) {
+    async update(request: AuthRequest, response: Response, next: NextFunction) {
         const id = parseInt(request.params.id)
         
         let orderToUpdate = await this.orderRepository.findOneBy({ id })
@@ -48,12 +51,17 @@ export class OrderController {
             return "This order does not exist"
         }
 
-        await this.orderRepository.update(id, request.body)
+        const updatedOrderData = {
+            ...request.body,
+            updatedBy: request.user.username, // Set the updatedBy column to the Order's ID
+        };
+
+        await this.orderRepository.update(id, updatedOrderData)
 
         return "The order has been updated"
     }
 
-    async delete(request: Request, response: Response, next: NextFunction) {
+    async delete(request: AuthRequest, response: Response, next: NextFunction) {
         const id = parseInt(request.params.id)
 
         let orderToRemove = await this.orderRepository.findOneBy({ id })
@@ -68,7 +76,7 @@ export class OrderController {
         return "order has been deleted"
     }
 
-    async remove(request: Request, response: Response, next: NextFunction) {
+    async remove(request: AuthRequest, response: Response, next: NextFunction) {
         const id = parseInt(request.params.id)
 
         let orderToRemove = await this.orderRepository.findOneBy({ id })
@@ -78,7 +86,9 @@ export class OrderController {
             return "This order does not exist"
         }
 
-        await this.orderRepository.softRemove(orderToRemove);
+        orderToRemove.status = 'inactive';
+        orderToRemove.status = request.user.username;   
+        await this.orderRepository.save(orderToRemove);
 
         return "order has been removed"
     }
