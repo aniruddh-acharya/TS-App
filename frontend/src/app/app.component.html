@@ -1,0 +1,11 @@
+<mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <span>TS-App</span>
+      <span class="example-spacer"></span>
+      <button mat-icon-button class="button" aria-hidden="false" aria-label="home" (click)="navigateToHomePage()">
+        <mat-icon class="icon" >home</mat-icon>
+      </button>
+      <button mat-raised-button style="background-color: red; color: white;" type="submit" class="mat-raised-button" (click)="logout()">Logout</button>
+    </mat-toolbar-row>
+</mat-toolbar>
+<router-outlet></router-outlet>

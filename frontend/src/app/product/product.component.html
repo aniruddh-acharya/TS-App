@@ -1,0 +1,27 @@
+<div class="container mt-4">
+    <h1><b>Products</b></h1><br>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Cost</th>
+            <th>Created On</th>         
+            <th>Created By</th>         
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let product of products">
+            <td>{{ product.id }}</td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.cost }}</td>
+            <td>{{ product.createdOn | date }}</td>
+            <td>{{ product.createdBy }}</td>
+            <td>
+                <button mat-icon-button color="primary" (click)="openEditProductDialog(product)"><mat-icon>edit</mat-icon></button>
+                <button mat-icon-button color="warn" (click)="deleteProduct(product.id)"><mat-icon>delete</mat-icon></button>
+            </td>
+        </tr>
+        </tbody>
+    <br><button class="mat-raised-button" mat-raised-button color="primary" (click)="openCreateProductDialog()">Add Product</button> <br>

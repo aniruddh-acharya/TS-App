@@ -1,0 +1,31 @@
+<div class="container mt-4">
+    <h1><b>Orders</b></h1><br>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Product Name</th>
+            <th>Purchased By</th>            
+            <th>Quantity</th>      
+            <th>Total Cost</th>
+            <th>Purchased On</th>         
+            <th>Created By</th>         
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let order of orders">
+            <td>{{ order.id }}</td>
+            <td>{{ getProductName(order.productID) }}</td>
+            <td>{{ getUserName(order.userID) }}</td>
+            <td>{{ order.quantity }}</td>
+            <td>{{ order.quantity*getCost(order.productID) }}</td>
+            <td>{{ order.purchasedOn | date }}</td>
+            <td>{{ order.createdBy }}</td>
+            <td>
+                <button mat-icon-button color="primary" (click)="openEditOrderDialog(order)"><mat-icon>edit</mat-icon></button>
+                <button mat-icon-button color="warn" (click)="deleteOrder(order.id)"><mat-icon>delete</mat-icon></button>
+            </td>
+        </tr>
+        </tbody>
+    <br><button class="btn-primary" mat-raised-button color="primary" (click)="openCreateOrderDialog()">Create an Order</button><br>

@@ -1,0 +1,19 @@
+<h2 mat-dialog-title>Add Product</h2>
+<mat-dialog-content>
+    <form class="form">
+
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" [(ngModel)]="name" [ngModelOptions]="{standalone: true}" class="form-control" title="Enter Product Name">
+        </div>
+
+        <div class="form-group">
+            <label>Cost</label>
+            <input type="number" [(ngModel)]="cost" [ngModelOptions]="{standalone: true}" class="form-control" title="Enter Product Cost">
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button class="btn" (click)="onCloseClick()">Cancel</button>
+  <button mat-raised-button color="primary" class="btn" [mat-dialog-close]="true" (click)="userUpdate()">Save</button>
+</mat-dialog-actions>

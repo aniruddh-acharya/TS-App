@@ -1,0 +1,26 @@
+<div class ="create-order-container">
+<h2 mat-dialog-title>Add Order</h2>
+<mat-dialog-content>
+    <form class="form">
+
+        <div class="form-group">
+            <label>User ID</label>
+            <input type="text" [(ngModel)]="userID" [ngModelOptions]="{standalone: true}" class="form-control" title="Enter Order Name">
+        </div>
+
+        <div class="form-group">
+            <label>Product ID</label>
+            <input type="number" [(ngModel)]="productID" [ngModelOptions]="{standalone: true}" class="form-control" title="Enter Order Cost">
+        </div>
+
+        <div class="form-group">
+            <label>Quantity</label>
+            <input type="number" [(ngModel)]="quantity" [ngModelOptions]="{standalone: true}" class="form-control" title="Enter Order Cost">
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button class="btn" (click)="onCloseClick()">Cancel</button>
+  <button mat-raised-button class="btn" [mat-dialog-close]="true" (click)="userUpdate()">Save</button>
+</mat-dialog-actions>
+</div>

@@ -1,0 +1,26 @@
+<div class="container mt-4">
+    <h2 mat-dialog-title>Edit Order</h2>
+<mat-dialog-content>
+    <form class="form">
+
+        <div class="form-group">
+            <label>User ID</label>
+            <input type="number" [(ngModel)]="userID" [ngModelOptions]="{standalone: true}" class="form-control" title="Enter Order User ID">
+        </div>
+
+        <div class="form-group">
+            <label>Product ID</label>
+            <input type="number" [(ngModel)]="productID" [ngModelOptions]="{standalone: true}" class="form-control" title="Enter Order Product ID">
+        </div>
+
+        <div class="form-group">
+            <label>Quantity</label>
+            <input type="number" [(ngModel)]="quantity" [ngModelOptions]="{standalone: true}" class="form-control" title="Enter Product Quantity">
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button class="btn" (click)="onCloseClick()">Cancel</button>
+  <button mat-raised-button color="primary" class="btn" [mat-dialog-close]="true" (click)="updateOrder()">Save</button>
+</mat-dialog-actions>
+</div>

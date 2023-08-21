@@ -1,0 +1,34 @@
+<div class="container mt-4">
+    <h1><b>Users</b></h1>
+    
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Age</th>
+            <th>Created On</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Updated On</th>
+            <th>Updated By</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let user of users">
+            <td>{{ user.id }}</td>
+            <td>{{ user.firstName }}</td>
+            <td>{{ user.lastName }}</td>
+            <td>{{ user.age }}</td>
+            <td>{{ user.createdOn | date }}</td>
+            <td>{{ getCredentialsByUserId(user.id)?.username }}</td>
+            <td>{{ getCredentialsByUserId(user.id)?.role }}</td>
+            <td>{{ user.updatedOn | date }}</td>
+            <td>{{ user.updatedBy }}</td>
+        </tr>
+        </tbody>
+    </table>
+    <button class="mat-raised-button" mat-raised-button color="primary" (click)="openUpdateUserDialog()">Update User</button>
+    <button class="mat-raised-button" mat-raised-button color="primary" (click)="openUpdateCredDialog()">Update Credentials</button>
+
