@@ -3,6 +3,7 @@
 Steps to run this project:
 
 -> If you want to run it through docker if installed, just run `docker-compose up --build` command and open `http://localhost`.
+
 -> If you want to run it locally:
 1. Navigate to folder 'backend' by running the command `cd .\backend` 
 2. Run `npm i` command
